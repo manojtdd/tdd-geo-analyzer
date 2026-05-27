@@ -10,7 +10,6 @@
     "identity"
   ],
   "host_permissions": [
-    "<all_urls>",
     "https://sheets.googleapis.com/*",
     "https://www.googleapis.com/*"
   ],
