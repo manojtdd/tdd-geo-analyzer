@@ -1,0 +1,40 @@
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  GEO Analyzer — Google Sheets Setup (5 min)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+To enable "Export to Sheets", you need a free Google Cloud OAuth
+client ID. Do this ONCE — teammates just sign in with Google.
+
+STEP 1 — Get your Extension ID
+  1. Load the extension in Chrome (chrome://extensions → Load unpacked)
+  2. Copy the Extension ID shown on the card (looks like: abcdefghijklmnopqrstuvwxyzabcdef)
+
+STEP 2 — Create a Google Cloud project
+  1. Go to https://console.cloud.google.com
+  2. Click "New Project", name it "GEO Analyzer", click Create
+  3. In the left menu: APIs & Services → Library
+  4. Search "Google Sheets API" → Enable it
+
+STEP 3 — Create OAuth credentials
+  1. APIs & Services → Credentials → Create Credentials → OAuth client ID
+  2. Application type: Chrome App
+  3. Name: GEO Analyzer
+  4. Application ID: paste your Extension ID from Step 1
+  5. Click Create → copy the Client ID (ends in .apps.googleusercontent.com)
+
+STEP 4 — Add Client ID to the extension
+  1. Open geo-analyzer-v2/manifest.json
+  2. Replace "YOUR_CLIENT_ID.apps.googleusercontent.com" with your Client ID
+  3. Save the file
+
+STEP 5 — Reload the extension
+  1. Go to chrome://extensions
+  2. Click the refresh icon on GEO Analyzer
+
+That's it! Now "Export to Sheets" will prompt for Google sign-in
+and automatically create a "GEO Analysis — TripleDart" spreadsheet
+in your Google Drive. All team members can sign in with their own accounts.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Questions? slatehq.com/seo-and-content-teams
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

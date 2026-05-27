@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GEO Analyzer</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- ── Header ─────────────────────────────────────────────────── -->
+  <div class="header">
+    <div class="header-left">
+      <div class="td-logo-mark">
+        <span class="td-dot"></span>
+        <span class="td-dot"></span>
+        <span class="td-dot"></span>
+      </div>
+      <span class="td-name">TripleDart</span>
+      <span class="header-divider"></span>
+      <span class="header-sub">GEO Analyzer</span>
+    </div>
+    <div class="google-status" id="google-status">
+      <!-- filled by JS: shows avatar or "Sign in" pill -->
+    </div>
+  </div>
+
+  <!-- ── Page bar ────────────────────────────────────────────────── -->
+  <div class="page-bar" id="page-bar">Loading…</div>
+
+  <!-- ── Analyze button ─────────────────────────────────────────── -->
+  <div class="analyze-wrap">
+    <button class="btn-analyze" id="btn-analyze">
+      <svg viewBox="0 0 20 20" fill="currentColor">
+        <path d="M9 3a1 1 0 012 0v.26c2.83.46 5 2.94 5 5.74a6 6 0 01-6 6 6 6 0 01-6-6c0-2.8 2.17-5.28 5-5.74V3zM10 16a4 4 0 004-4 4 4 0 00-4-4 4 4 0 00-4 4 4 4 0 004 4z"/>
+      </svg>
+      Analyze Page
+    </button>
+  </div>
+
+  <!-- ── Loading ────────────────────────────────────────────────── -->
+  <div class="loading hidden" id="state-loading">
+    <div class="spinner"></div>
+    <div class="loading-text">Analyzing page…</div>
+  </div>
+
+  <!-- ── Error ──────────────────────────────────────────────────── -->
+  <div class="error-box hidden" id="state-error">
+    <svg class="error-icon" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+    </svg>
+    <span id="errorText">Could not analyze this page. Try refreshing and clicking Analyze again.</span>
+  </div>
+
+  <!-- ── Results ────────────────────────────────────────────────── -->
+  <div class="results hidden" id="state-results">
+
+    <!-- Score section -->
+    <div class="score-section">
+      <div class="score-ring-wrap">
+        <svg class="score-ring" viewBox="0 0 120 120">
+          <circle class="ring-bg" cx="60" cy="60" r="50"/>
+          <circle class="ring-fill" id="ring-fill" cx="60" cy="60" r="50"
+            stroke-dasharray="314" stroke-dashoffset="314"/>
+        </svg>
+        <div class="score-center">
+          <div class="score-number" id="score-number">--</div>
+          <div class="score-grade" id="score-grade">–</div>
+        </div>
+      </div>
+
+      <div class="score-meta">
+        <div class="score-pts" id="score-pts"></div>
+        <div class="score-cache" id="score-cache"></div>
+        <div class="score-actions">
+          <button class="btn-export" id="btn-export">
+            <svg viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+            </svg>
+            <span id="export-btn-text">Export to Sheets</span>
+          </button>
+          <button class="btn-copy-sm" id="btn-copy">
+            <svg viewBox="0 0 20 20" fill="currentColor">
+              <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"/>
+              <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z"/>
+            </svg>
+            Copy
+          </button>
+          <button class="btn-copy-sm" id="btn-reanalyze" title="Clear cache and re-analyze">
+            <svg viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/>
+            </svg>
+            Re-run
+          </button>
+        </div>
+        <div class="export-status hidden" id="export-status">
+          <span id="export-status-text"></span>
+          <a id="sheet-link" href="#" target="_blank" class="sheet-link hidden">Open Sheet ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category bars -->
+    <div class="gaps-header">
+      <span class="gaps-title">Category Scores</span>
+    </div>
+    <div class="category-bars" id="category-bars"></div>
+
+    <!-- Tabs -->
+    <div class="tabs-row">
+      <button class="tab-btn active" data-tab="issues">
+        Issues <span class="tab-badge" id="issues-count">0</span>
+      </button>
+      <button class="tab-btn" data-tab="passing">
+        Passing <span class="tab-badge tab-green" id="passing-count">0</span>
+      </button>
+    </div>
+
+    <!-- Issues tab -->
+    <div class="tab-pane" id="tab-issues">
+      <div class="gaps-list" id="issues-list"></div>
+    </div>
+
+    <!-- Passing tab -->
+    <div class="tab-pane hidden" id="tab-passing">
+      <div class="gaps-list" id="passing-list"></div>
+    </div>
+
+  </div><!-- /results -->
+
+  <!-- ── CTA link ───────────────────────────────────────────────── -->
+  <a href="https://slatehq.com/seo-and-content-teams" target="_blank" class="cta-link">
+    Automate your SEO &amp; GEO
+    <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M2 10L10 2M5 2h5v5"/>
+    </svg>
+  </a>
+
+  <!-- ── Slate footer ───────────────────────────────────────────── -->
+  <a href="https://slatehq.com" target="_blank" class="slate-footer">
+    <span class="powered-txt">Powered by</span>
+    <div class="slate-logo">
+      <svg viewBox="0 0 14 14" fill="none">
+        <path d="M3 10.5C3 9.12 4.12 8 5.5 8H11V5.5C11 4.12 9.88 3 8.5 3H3V10.5Z" fill="white"/>
+        <path d="M11 8H5.5C4.12 8 3 9.12 3 10.5V11H8.5C9.88 11 11 9.88 11 8.5V8Z" fill="white" opacity="0.6"/>
+      </svg>
+    </div>
+    <span class="slate-name">Slate</span>
+    <svg class="ext-arrow" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M2 8L8 2M5 2h3v3"/>
+    </svg>
+  </a>
+
+</div><!-- /app -->
+<script src="popup.js"></script>
+</body>
+</html>

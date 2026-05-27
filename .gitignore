@@ -1,0 +1,14 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Claude context (private conversation files)
+.claude/
+
+# Build artifacts
+*.zip
+*.crx
+
+# Editor
+.vscode/
+.idea/
