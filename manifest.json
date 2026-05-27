@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "GEO Analyzer by TripleDart",
   "version": "2.1.0",
-  "description": "Score any webpage for Generative Engine Optimization across 36 checks and 6 categories. Zero API calls — all analysis runs in-browser.",
+  "description": "Score any webpage for Generative Engine Optimization across 36 checks and 6 categories. All analysis runs entirely in-browser.",
   "permissions": [
     "activeTab",
     "storage",
