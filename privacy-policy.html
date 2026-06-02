@@ -90,7 +90,7 @@
     <li><strong>scripting:</strong> To inject the content script that extracts page data for analysis</li>
     <li><strong>storage:</strong> To cache analysis results and save your spreadsheet ID locally on your device</li>
     <li><strong>identity:</strong> To authenticate with Google OAuth 2.0 for the Google Sheets export feature</li>
-    <li><strong>host permissions (&lt;all_urls&gt;):</strong> To allow analysis of any webpage; no data from visited pages is transmitted externally</li>
+    <li><strong>host permissions (sheets.googleapis.com, www.googleapis.com):</strong> Required to call the Google Sheets API to create and write spreadsheets, and to fetch Google account information for the sign-in display. No other host permissions are requested — page analysis runs via the <code>activeTab</code> and <code>scripting</code> permissions, which only grant access to the tab the user is actively viewing when they click Analyze.</li>
   </ul>
 
   <h2>6. Data Retention</h2>

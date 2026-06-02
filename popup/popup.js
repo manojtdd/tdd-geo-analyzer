@@ -97,7 +97,9 @@ async function runAnalysis() {
         target: { tabId: currentTab.id },
         files: ['content/content.js']
       });
-    } catch (_) {}
+    } catch (_) {
+      throw new Error('This page cannot be analyzed. Please navigate to a regular website (not a browser or extension page) and try again.');
+    }
 
     const result = await new Promise((resolve, reject) => {
       chrome.runtime.sendMessage(
