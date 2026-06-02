@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "GEO Analyzer by TripleDart",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Score any webpage for Generative Engine Optimization across 36 checks and 6 categories. All analysis runs entirely in-browser.",
   "permissions": [
     "activeTab",
@@ -14,7 +14,7 @@
     "https://www.googleapis.com/*"
   ],
   "oauth2": {
-    "client_id": "954557538995-67rh5hk7mvmhu5kbvrq695convd74f06.apps.googleusercontent.com",
+    "client_id": "954557538995-2k95h39ecrrv7mauogrta4p1c6r7nehs.apps.googleusercontent.com",
     "scopes": [
       "https://www.googleapis.com/auth/spreadsheets",
       "https://www.googleapis.com/auth/drive.file"
