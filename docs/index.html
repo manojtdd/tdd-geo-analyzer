@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GEO Analyzer Help &amp; Documentation — TripleDart</title>
+  <meta name="description" content="Complete guide to using GEO Analyzer by TripleDart. Learn how to score your pages, understand all 36 GEO checks, export to Google Sheets, and optimize for AI search engines.">
+  <meta property="og:title" content="GEO Analyzer Help — TripleDart">
+  <meta property="og:description" content="Complete documentation for GEO Analyzer Chrome extension. 36 checks, 6 categories, Google Sheets export.">
+  <style>
+    /* ── Reset & Base ─────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f8f9fc;
+      --surface: #ffffff;
+      --border: #e8eaf0;
+      --text: #1a1a2e;
+      --muted: #6b7280;
+      --accent: #f97316;
+      --accent-hover: #ea6c0a;
+      --green: #10b981;
+      --yellow: #f59e0b;
+      --red: #ef4444;
+      --blue: #3b82f6;
+      --purple: #8b5cf6;
+      --sidebar-w: 260px;
+      --header-h: 60px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
+      font-size: 15px; line-height: 1.7; color: var(--text);
+      background: var(--bg);
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code {
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 13px; background: #f1f3f9; border: 1px solid var(--border);
+      border-radius: 4px; padding: 1px 5px; color: #c0392b;
+    }
+    pre {
+      background: #1e1e2e; color: #cdd6f4; border-radius: 10px;
+      padding: 18px 20px; overflow-x: auto; font-size: 13px;
+      line-height: 1.6; margin: 16px 0;
+    }
+    pre code { background: none; border: none; padding: 0; color: inherit; font-size: inherit; }
+    img { max-width: 100%; height: auto; border-radius: 10px; }
+
+    /* ── Top nav ──────────────────────────────────── */
+    .topnav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: var(--header-h);
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; padding: 0 24px;
+      gap: 12px;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; color: var(--text);
+    }
+    .logo-mark {
+      width: 30px; height: 30px; background: #0f1623; border-radius: 7px;
+      display: flex; align-items: center; justify-content: center; gap: 3px; flex-shrink: 0;
+    }
+    .logo-dot { width: 4px; height: 4px; border-radius: 50%; background: #fff; }
+    .logo-text { font-size: 15px; font-weight: 700; color: #0f1623; }
+    .logo-divider { width: 1px; height: 16px; background: var(--border); }
+    .logo-sub { font-size: 13px; color: var(--muted); }
+    .nav-badge {
+      margin-left: auto; font-size: 11px; font-weight: 600;
+      background: #f0fdf4; color: #15803d; border: 1px solid #86efac;
+      border-radius: 20px; padding: 2px 10px; letter-spacing: 0.03em;
+    }
+    .nav-cws-link {
+      font-size: 13px; font-weight: 600; color: var(--accent);
+      background: #fff7ed; border: 1px solid #fed7aa;
+      border-radius: 20px; padding: 5px 14px;
+      transition: background .15s;
+    }
+    .nav-cws-link:hover { background: #ffedd5; text-decoration: none; }
+
+    /* ── Layout ───────────────────────────────────── */
+    .layout {
+      display: flex; padding-top: var(--header-h);
+      min-height: 100vh;
+    }
+
+    /* ── Sidebar ──────────────────────────────────── */
+    .sidebar {
+      width: var(--sidebar-w); flex-shrink: 0;
+      position: fixed; top: var(--header-h); bottom: 0; left: 0;
+      overflow-y: auto; border-right: 1px solid var(--border);
+      background: var(--surface); padding: 24px 0 40px;
+    }
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    .sidebar-section { margin-bottom: 24px; }
+    .sidebar-label {
+      font-size: 10px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--muted);
+      padding: 0 20px; margin-bottom: 6px;
+    }
+    .sidebar-link {
+      display: block; padding: 6px 20px; font-size: 13.5px; color: #374151;
+      text-decoration: none; border-left: 3px solid transparent;
+      transition: background .12s, color .12s, border-color .12s;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .sidebar-link:hover { background: var(--bg); color: var(--text); text-decoration: none; }
+    .sidebar-link.active {
+      border-left-color: var(--accent); background: #fff7ed; color: var(--accent); font-weight: 600;
+    }
+    .sidebar-link.indent { padding-left: 32px; font-size: 13px; color: var(--muted); }
+    .sidebar-link.indent:hover { color: var(--text); }
+
+    /* ── Main content ─────────────────────────────── */
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1; padding: 48px 60px 80px;
+      max-width: calc(var(--sidebar-w) + 820px);
+    }
+
+    /* ── Section headings ─────────────────────────── */
+    .doc-section { margin-bottom: 64px; scroll-margin-top: calc(var(--header-h) + 16px); }
+    h1.page-title {
+      font-size: 36px; font-weight: 800; color: var(--text);
+      letter-spacing: -.02em; margin-bottom: 8px;
+    }
+    .page-subtitle { font-size: 17px; color: var(--muted); margin-bottom: 40px; }
+    h2 {
+      font-size: 22px; font-weight: 700; color: var(--text);
+      margin-bottom: 12px; margin-top: 0;
+      padding-bottom: 8px; border-bottom: 2px solid var(--border);
+    }
+    h3 { font-size: 17px; font-weight: 700; color: var(--text); margin: 24px 0 8px; }
+    h4 { font-size: 14px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin: 20px 0 6px; }
+    p { color: #374151; margin-bottom: 14px; }
+    ul, ol { color: #374151; padding-left: 22px; margin-bottom: 14px; }
+    li { margin-bottom: 6px; }
+    strong { color: var(--text); }
+
+    /* ── Callout boxes ────────────────────────────── */
+    .callout {
+      border-radius: 10px; padding: 14px 18px; margin: 20px 0;
+      display: flex; gap: 12px; align-items: flex-start;
+    }
+    .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .callout-body { flex: 1; }
+    .callout-body p:last-child { margin-bottom: 0; }
+    .callout.tip { background: #f0fdf4; border: 1px solid #86efac; color: #14532d; }
+    .callout.note { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e3a8a; }
+    .callout.warn { background: #fffbeb; border: 1px solid #fcd34d; color: #92400e; }
+    .callout.info { background: #faf5ff; border: 1px solid #d8b4fe; color: #4c1d95; }
+
+    /* ── Score grades ─────────────────────────────── */
+    .grade-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 12px; margin: 16px 0 24px;
+    }
+    .grade-card {
+      border-radius: 10px; padding: 14px 16px; text-align: center;
+      border: 1px solid transparent;
+    }
+    .grade-card .grade { font-size: 28px; font-weight: 800; }
+    .grade-card .range { font-size: 12px; font-weight: 600; margin-top: 2px; }
+    .grade-card .desc { font-size: 11px; color: var(--muted); margin-top: 4px; }
+    .g-aplus { background: #f0fdf4; border-color: #86efac; color: #15803d; }
+    .g-a     { background: #ecfdf5; border-color: #6ee7b7; color: #059669; }
+    .g-b     { background: #eff6ff; border-color: #bfdbfe; color: #2563eb; }
+    .g-c     { background: #fffbeb; border-color: #fcd34d; color: #d97706; }
+    .g-d     { background: #fff7ed; border-color: #fed7aa; color: #ea580c; }
+    .g-f     { background: #fef2f2; border-color: #fca5a5; color: #dc2626; }
+
+    /* ── Category cards ───────────────────────────── */
+    .category-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0;
+    }
+    .cat-card {
+      border: 1px solid var(--border); border-radius: 12px;
+      padding: 18px 20px; background: var(--surface);
+    }
+    .cat-card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .cat-icon {
+      width: 34px; height: 34px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px; flex-shrink: 0;
+    }
+    .cat-title { font-size: 14px; font-weight: 700; color: var(--text); }
+    .cat-pts { font-size: 12px; color: var(--muted); }
+    .cat-desc { font-size: 13px; color: #6b7280; line-height: 1.5; }
+    .bg-orange { background: #fff7ed; }
+    .bg-green  { background: #f0fdf4; }
+    .bg-purple { background: #faf5ff; }
+    .bg-blue   { background: #eff6ff; }
+    .bg-teal   { background: #f0fdfa; }
+    .bg-slate  { background: #f8fafc; }
+
+    /* ── Rule table ───────────────────────────────── */
+    .rule-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13.5px; }
+    .rule-table th {
+      background: var(--bg); padding: 9px 12px; text-align: left;
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .06em; color: var(--muted);
+      border-bottom: 2px solid var(--border);
+    }
+    .rule-table td {
+      padding: 10px 12px; border-bottom: 1px solid var(--border);
+      vertical-align: top; color: #374151;
+    }
+    .rule-table tr:last-child td { border-bottom: none; }
+    .rule-table tr:hover td { background: var(--bg); }
+    .pts-badge {
+      display: inline-block; font-size: 11px; font-weight: 700;
+      padding: 1px 7px; border-radius: 10px;
+      background: #e0e7ff; color: #3730a3;
+    }
+    .status-pass   { color: var(--green); font-weight: 600; }
+    .status-partial { color: var(--yellow); font-weight: 600; }
+    .status-fail   { color: var(--red); font-weight: 600; }
+
+    /* ── Step cards ───────────────────────────────── */
+    .steps { counter-reset: step; display: flex; flex-direction: column; gap: 16px; margin: 20px 0; }
+    .step {
+      counter-increment: step;
+      display: flex; gap: 16px; align-items: flex-start;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 18px 20px;
+    }
+    .step-num {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 800; flex-shrink: 0;
+    }
+    .step-num::before { content: counter(step); }
+    .step-body h3 { margin: 0 0 6px; font-size: 15px; }
+    .step-body p  { margin-bottom: 0; font-size: 14px; }
+
+    /* ── FAQ accordion ────────────────────────────── */
+    .faq-item {
+      border: 1px solid var(--border); border-radius: 10px;
+      margin-bottom: 10px; overflow: hidden;
+    }
+    .faq-q {
+      width: 100%; text-align: left; background: none; border: none;
+      padding: 16px 20px; font-size: 14.5px; font-weight: 600;
+      color: var(--text); cursor: pointer; display: flex;
+      justify-content: space-between; align-items: center; gap: 12px;
+    }
+    .faq-q:hover { background: var(--bg); }
+    .faq-arrow { font-size: 20px; color: var(--muted); flex-shrink: 0; transition: transform .2s; }
+    .faq-item.open .faq-arrow { transform: rotate(45deg); }
+    .faq-a { display: none; padding: 0 20px 16px; font-size: 14px; color: #374151; line-height: 1.7; }
+    .faq-item.open .faq-a { display: block; }
+
+    /* ── Checklist ────────────────────────────────── */
+    .checklist { list-style: none; padding: 0; }
+    .checklist li {
+      display: flex; gap: 10px; align-items: flex-start;
+      padding: 8px 0; border-bottom: 1px solid var(--border);
+      font-size: 14px; color: #374151;
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .check-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── Inline tag ───────────────────────────────── */
+    .tag {
+      display: inline-block; font-size: 11px; font-weight: 700;
+      padding: 1px 8px; border-radius: 10px; vertical-align: middle;
+    }
+    .tag-orange { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
+    .tag-green  { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+    .tag-blue   { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .tag-purple { background: #faf5ff; color: #6d28d9; border: 1px solid #ddd6fe; }
+    .tag-teal   { background: #f0fdfa; color: #0f766e; border: 1px solid #99f6e4; }
+    .tag-slate  { background: #f8fafc; color: #475569; border: 1px solid #cbd5e1; }
+    .tag-yellow { background: #fffbeb; color: #92400e; border: 1px solid #fcd34d; }
+
+    /* ── Hero block ───────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, #0f1623 0%, #1a2744 100%);
+      border-radius: 16px; padding: 44px 48px; margin-bottom: 40px;
+      color: #fff; display: flex; align-items: center; gap: 32px;
+    }
+    .hero-icon {
+      width: 72px; height: 72px; background: var(--accent);
+      border-radius: 18px; display: flex; align-items: center;
+      justify-content: center; font-size: 36px; flex-shrink: 0;
+    }
+    .hero-content h1 { font-size: 28px; font-weight: 800; color: #fff; margin-bottom: 8px; border: none; padding: 0; }
+    .hero-content p  { color: rgba(255,255,255,0.75); margin-bottom: 0; font-size: 15px; }
+    .hero-stats { display: flex; gap: 28px; margin-top: 20px; }
+    .hero-stat-val { font-size: 28px; font-weight: 800; color: var(--accent); }
+    .hero-stat-lbl { font-size: 12px; color: rgba(255,255,255,0.5); font-weight: 500; }
+
+    /* ── Quick start pills ───────────────────────── */
+    .quick-steps {
+      display: flex; gap: 0; margin: 24px 0;
+      border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+    }
+    .qs {
+      flex: 1; padding: 16px 20px; text-align: center;
+      border-right: 1px solid var(--border);
+    }
+    .qs:last-child { border-right: none; }
+    .qs-num { font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: .06em; text-transform: uppercase; }
+    .qs-title { font-size: 13px; font-weight: 700; color: var(--text); margin-top: 4px; }
+
+    /* ── Responsive ───────────────────────────────── */
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; padding: 32px 24px 60px; }
+      .category-grid { grid-template-columns: 1fr; }
+      .hero { flex-direction: column; padding: 28px; }
+      .quick-steps { flex-direction: column; }
+      .qs { border-right: none; border-bottom: 1px solid var(--border); }
+      .qs:last-child { border-bottom: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Top nav ──────────────────────────────────────────────── -->
+<nav class="topnav">
+  <a href="#" class="nav-logo">
+    <div class="logo-mark">
+      <span class="logo-dot"></span>
+      <span class="logo-dot"></span>
+      <span class="logo-dot"></span>
+    </div>
+    <span class="logo-text">TripleDart</span>
+    <span class="logo-divider"></span>
+    <span class="logo-sub">GEO Analyzer</span>
+  </a>
+  <span class="nav-badge">v2.1.2</span>
+  <a href="https://chromewebstore.google.com/detail/geo-analyzer-by-tripledart" target="_blank" class="nav-cws-link" style="margin-left:auto;">Install Extension ↗</a>
+</nav>
+
+<!-- ── Layout ───────────────────────────────────────────────── -->
+<div class="layout">
+
+  <!-- ── Sidebar ────────────────────────────────────────────── -->
+  <aside class="sidebar">
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Getting Started</div>
+      <a href="#overview"   class="sidebar-link active">What is GEO Analyzer?</a>
+      <a href="#install"    class="sidebar-link">Installation</a>
+      <a href="#quickstart" class="sidebar-link">Quick Start</a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Using the Extension</div>
+      <a href="#analyze"    class="sidebar-link">Analyzing a Page</a>
+      <a href="#score"      class="sidebar-link">Understanding Your Score</a>
+      <a href="#categories" class="sidebar-link">The 6 Categories</a>
+      <a href="#tabs"       class="sidebar-link">Issues &amp; Passing Tabs</a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">All 36 Rules</div>
+      <a href="#rules-content"       class="sidebar-link indent">Content Quality (8 rules)</a>
+      <a href="#rules-eeat"          class="sidebar-link indent">E-E-A-T Signals (5 rules)</a>
+      <a href="#rules-schema"        class="sidebar-link indent">Structured Data (7 rules)</a>
+      <a href="#rules-formatting"    class="sidebar-link indent">Formatting (7 rules)</a>
+      <a href="#rules-conversational" class="sidebar-link indent">Conversational &amp; AI (5 rules)</a>
+      <a href="#rules-technical"     class="sidebar-link indent">Technical &amp; Freshness (4 rules)</a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Export & Integrations</div>
+      <a href="#sheets"     class="sidebar-link">Export to Google Sheets</a>
+      <a href="#copy"       class="sidebar-link">Copy Score Summary</a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Reference</div>
+      <a href="#faq"        class="sidebar-link">FAQ &amp; Troubleshooting</a>
+      <a href="#privacy"    class="sidebar-link">Privacy &amp; Permissions</a>
+      <a href="#changelog"  class="sidebar-link">Changelog</a>
+    </div>
+
+  </aside>
+
+  <!-- ── Main ───────────────────────────────────────────────── -->
+  <main class="main">
+
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-icon">📊</div>
+      <div class="hero-content">
+        <h1>GEO Analyzer Documentation</h1>
+        <p>Score any webpage for Generative Engine Optimization. 36 checks across 6 categories — all analysis runs entirely in your browser, zero data sent to any server.</p>
+        <div class="hero-stats">
+          <div>
+            <div class="hero-stat-val">36</div>
+            <div class="hero-stat-lbl">Checks</div>
+          </div>
+          <div>
+            <div class="hero-stat-val">6</div>
+            <div class="hero-stat-lbl">Categories</div>
+          </div>
+          <div>
+            <div class="hero-stat-val">100</div>
+            <div class="hero-stat-lbl">Point scale</div>
+          </div>
+          <div>
+            <div class="hero-stat-val">0</div>
+            <div class="hero-stat-lbl">API calls</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ────────────────────────────────────────────────────── -->
+    <!-- SECTION: Overview -->
+    <!-- ────────────────────────────────────────────────────── -->
+    <section id="overview" class="doc-section">
+      <h2>What is GEO Analyzer?</h2>
+      <p><strong>GEO Analyzer by TripleDart</strong> is a free Chrome extension that scores any public webpage for <strong>Generative Engine Optimization (GEO)</strong> — the practice of making your content visible and citable in AI-powered search engines like ChatGPT, Perplexity, Google AI Overviews, and Claude.</p>
+      <p>Unlike traditional SEO, GEO focuses on how AI models read, understand, and decide to surface your content. The extension evaluates 36 signals across 6 categories and gives you a 0–100 score with a letter grade and specific, actionable recommendations.</p>
+
+      <h3>Why GEO matters</h3>
+      <p>AI search engines don't rank pages the traditional way. They read the full content, extract key facts, evaluate credibility signals, and decide whether to include your content in their generated answers. A page can rank #1 on Google but still be completely ignored by AI engines — because it lacks structured data, author signals, or direct-answer formatting.</p>
+      <p>GEO Analyzer tells you exactly what to fix so your content gets cited by AI.</p>
+
+      <div class="callout tip">
+        <span class="callout-icon">🔒</span>
+        <div class="callout-body">
+          <strong>100% private by design.</strong> All 36 analysis checks run entirely inside your browser. The content of the page you're analyzing is never sent to TripleDart's servers or any third-party service.
+        </div>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────────────────────────── -->
+    <!-- SECTION: Install -->
+    <!-- ────────────────────────────────────────────────────── -->
+    <section id="install" class="doc-section">
+      <h2>Installation</h2>
+
+      <h3>From the Chrome Web Store (recommended)</h3>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-body">
+            <h3>Open the Chrome Web Store listing</h3>
+            <p>Go to the <a href="https://chromewebstore.google.com/detail/geo-analyzer-by-tripledart" target="_blank">GEO Analyzer listing</a> on the Chrome Web Store.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-body">
+            <h3>Click "Add to Chrome"</h3>
+            <p>Click the blue <strong>Add to Chrome</strong> button, then confirm by clicking <strong>Add extension</strong> in the dialog that appears.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-body">
+            <h3>Pin the extension (optional)</h3>
+            <p>Click the puzzle-piece icon in Chrome's toolbar → find <strong>GEO Analyzer by TripleDart</strong> → click the pin icon so the icon is always visible in your toolbar.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3>Supported browsers</h3>
+      <ul>
+        <li><strong>Google Chrome</strong> — version 88+ (Manifest V3 supported)</li>
+        <li><strong>Microsoft Edge</strong> — version 88+</li>
+        <li><strong>Brave, Opera, Vivaldi</strong> — any Chromium-based browser that supports Chrome extensions</li>
+      </ul>
+      <div class="callout note">
+        <span class="callout-icon">ℹ️</span>
+        <div class="callout-body">Firefox is not supported — the extension uses Chrome-specific APIs (<code>chrome.scripting</code>, <code>chrome.identity</code>) that are not available in Firefox.
+        </div>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────────────────────────── -->
+    <!-- SECTION: Quick Start -->
+    <!-- ────────────────────────────────────────────────────── -->
+    <section id="quickstart" class="doc-section">
+      <h2>Quick Start</h2>
+      <p>You can get your first GEO score in under 30 seconds:</p>
+      <div class="quick-steps">
+        <div class="qs"><div class="qs-num">Step 1</div><div class="qs-title">Open a webpage</div></div>
+        <div class="qs"><div class="qs-num">Step 2</div><div class="qs-title">Click the extension icon</div></div>
+        <div class="qs"><div class="qs-num">Step 3</div><div class="qs-title">Click "Analyze Page"</div></div>
+        <div class="qs"><div class="qs-num">Step 4</div><div class="qs-title">Read your score &amp; fix issues</div></div>
+      </div>
+      <p>Results appear in 1–3 seconds. The score is cached for 30 minutes — use the <strong>Re-run</strong> button to force a fresh analysis after making changes.</p>
+    </section>
+
+    <!-- ────────────────────────────────────────────────────── -->
+    <!-- SECTION: Analyzing a page -->
+    <!-- ────────────────────────────────────────────────────── -->
+    <section id="analyze" class="doc-section">
+      <h2>Analyzing a Page</h2>
+
+      <h3>What you can analyze</h3>
+      <p>GEO Analyzer works on any regular website — blog posts, landing pages, product pages, documentation, news articles, local business pages, etc. Navigate to the page in Chrome, click the extension icon, then click <strong>Analyze Page</strong>.</p>
+
+      <div class="callout warn">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-body">
+          <strong>Cannot analyze:</strong> Chrome's own pages (<code>chrome://</code>), the Chrome Web Store, extension pages, local files (<code>file://</code>), PDFs, or pages behind a login wall. A clear error message is shown if you try.
+        </div>
+      </div>
+
+      <h3>Re-analyzing after changes</h3>
+      <p>Results are cached for <strong>30 minutes</strong> per URL. After editing your page's content or code, click the <strong>Re-run</strong> button (↺) next to the score to clear the cache and run a fresh analysis immediately.</p>
+
+      <h3>What the extension reads</h3>
+      <ul>
+        <li>All visible text content (headings, paragraphs, lists, tables)</li>
+        <li>HTML structure (H1–H6 tags, image alt text, internal/external links)</li>
+        <li>Meta tags (description, Open Graph, Twitter Card, canonical, viewport)</li>
+        <li>JSON-LD schema markup (<code>&lt;script type="application/ld+json"&gt;</code>)</li>
+        <li>Performance metrics (Largest Contentful Paint via <code>PerformanceObserver</code>)</li>
+        <li>Page URL and protocol (HTTPS check)</li>
+      </ul>
+    </section>
+
+    <!-- ────────────────────────────────────────────────────── -->
+    <!-- SECTION: Score -->
+    <!-- ────────────────────────────────────────────────────── -->
+    <section id="score" class="doc-section">
+      <h2>Understanding Your Score</h2>
+
+      <h3>How the score is calculated</h3>
+      <p>Each of the 36 rules has a <strong>point value</strong> (1–5 pts). When a check passes, you earn the full points. A <strong>partial pass</strong> earns 50% of the points. A fail earns 0. The total is scaled to 100:</p>
+      <pre><code>Score = round((earned points / total possible points) × 100)</code></pre>
+      <p>The maximum possible raw points across all 36 rules is 100, so the formula maps directly.</p>
+
+      <h3>Letter grades</h3>
+      <div class="grade-grid">
+        <div class="grade-card g-aplus"><div class="grade">A+</div><div class="range">90–100</div><div class="desc">Exceptional GEO</div></div>
+        <div class="grade-card g-a"><div class="grade">A</div><div class="range">80–89</div><div class="desc">Strong GEO</div></div>
+        <div class="grade-card g-b"><div class="grade">B</div><div class="range">70–79</div><div class="desc">Good foundation</div></div>
+        <div class="grade-card g-c"><div class="grade">C</div><div class="range">60–69</div><div class="desc">Needs work</div></div>
+        <div class="grade-card g-d"><div class="grade">D</div><div class="range">50–59</div><div class="desc">Poor GEO signals</div></div>
+        <div class="grade-card g-f"><div class="grade">F</div><div class="range">0–49</div><div class="desc">Major gaps</div></div>
+      </div>
+
+      <h3>Points display</h3>
+      <p>Below the score ring you'll see <em>"X / 100 pts"</em> — the exact earned points before any rounding. This helps when you're close to a grade boundary and want to know exactly which fix pushes you over.</p>
+
+      <h3>Category bar scores</h3>
+      <p>Below the main score, each of the 6 categories shows its own progress bar and percentage. This tells you at a glance <em>which area</em> is dragging your score down. Focus on the lowest bar first — it's your biggest opportunity.</p>
+
+      <div class="callout tip">
+        <span class="callout-icon">💡</span>
+        <div class="callout-body">
+          <strong>Benchmark target:</strong> Aim for a <strong>B grade (70+)</strong> as your baseline. Pages scoring 80+ tend to appear in AI-generated answers significantly more often than pages below 60.
+        </div>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────────────────────────── -->
+    <!-- SECTION: 6 Categories -->
+    <!-- ────────────────────────────────────────────────────── -->
+    <section id="categories" class="doc-section">
+      <h2>The 6 Categories</h2>
+      <p>The 36 checks are grouped into 6 categories, each targeting a different dimension of AI-readiness. The points are weighted to reflect how much each factor influences AI engine decisions.</p>
+
+      <div class="category-grid">
+        <div class="cat-card">
+          <div class="cat-card-head">
+            <div class="cat-icon bg-orange">📝</div>
+            <div>
+              <div class="cat-title">Content Quality &amp; Depth</div>
+              <div class="cat-pts">25 points · 8 rules</div>
+            </div>
+          </div>
+          <div class="cat-desc">Word count, factual density, paragraph depth, meta description, images, internal links, FAQ structure, and duplicate content detection. The highest-weighted category — AI engines fundamentally need substantive, original content.</div>
+        </div>
+        <div class="cat-card">
+          <div class="cat-card-head">
+            <div class="cat-icon bg-green">🏅</div>
+            <div>
+              <div class="cat-title">E-E-A-T Signals</div>
+              <div class="cat-pts">20 points · 5 rules</div>
+            </div>
+          </div>
+          <div class="cat-desc">Author byline, author bio, publication date, authoritative external citations, brand/org entity schema, and outbound link count. Experience, Expertise, Authoritativeness, and Trustworthiness signals that AI uses to evaluate credibility.</div>
+        </div>
+        <div class="cat-card">
+          <div class="cat-card-head">
+            <div class="cat-icon bg-purple">🏗️</div>
+            <div>
+              <div class="cat-title">Structured Data &amp; Markup</div>
+              <div class="cat-pts">20 points · 7 rules</div>
+            </div>
+          </div>
+          <div class="cat-desc">JSON-LD schema presence, schema type matching, FAQPage schema, Open Graph tags, Twitter Card, canonical URL, and BreadcrumbList schema. Machine-readable signals that AI crawlers parse directly.</div>
+        </div>
+        <div class="cat-card">
+          <div class="cat-card-head">
+            <div class="cat-icon bg-blue">📐</div>
+            <div>
+              <div class="cat-title">Formatting &amp; Scannability</div>
+              <div class="cat-pts">15 points · 7 rules</div>
+            </div>
+          </div>
+          <div class="cat-desc">H1 uniqueness, H2/H3 hierarchy, bullet/numbered lists, callout boxes, table of contents, Flesch-Kincaid reading level, and comparison tables. AI extracts structured information far more reliably from well-formatted content.</div>
+        </div>
+        <div class="cat-card">
+          <div class="cat-card-head">
+            <div class="cat-icon bg-teal">💬</div>
+            <div>
+              <div class="cat-title">Conversational &amp; AI-Friendly</div>
+              <div class="cat-pts">12 points · 5 rules</div>
+            </div>
+          </div>
+          <div class="cat-desc">Direct answers at section starts, question-style headings, active voice usage, inline term definitions, and jargon density. Optimizes for how AI models extract and rephrase content for conversational answers.</div>
+        </div>
+        <div class="cat-card">
+          <div class="cat-card-head">
+            <div class="cat-icon bg-slate">⚙️</div>
+            <div>
+              <div class="cat-title">Technical &amp; Freshness</div>
+              <div class="cat-pts">8 points · 4 rules</div>
+            </div>
+          </div>
+          <div class="cat-desc">HTTPS protocol, Core Web Vitals (LCP), mobile viewport meta tag, and content freshness within 12 months. The baseline hygiene signals — necessary but not sufficient on their own.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────────────────────────── -->
+    <!-- SECTION: Tabs -->
+    <!-- ────────────────────────────────────────────────────── -->
+    <section id="tabs" class="doc-section">
+      <h2>Issues &amp; Passing Tabs</h2>
+
+      <h3>Issues tab</h3>
+      <p>Lists every check that <strong>failed</strong> or <strong>partially passed</strong>, sorted by priority: full failures appear first (highest impact), followed by partial passes. Within each tier, rules are sorted by point value — so the top of the Issues list is always where your biggest gains are.</p>
+      <p>Each issue shows:</p>
+      <ul>
+        <li><strong>Rule name</strong> — what was checked</li>
+        <li><strong>Category tag</strong> — which area it belongs to</li>
+        <li><strong>Point value</strong> — how many points you'd gain by fixing it</li>
+        <li><strong>Detail message</strong> — a specific description of what was found and how to fix it</li>
+      </ul>
+
+      <h3>Passing tab</h3>
+      <p>Lists all checks that <strong>fully passed</strong>, with the detail message confirming what was found (e.g., "Author attribution found on page"). Use this to confirm optimizations are working after making changes.</p>
+
+      <div class="callout tip">
+        <span class="callout-icon">💡</span>
+        <div class="callout-body">
+          <strong>Prioritization tip:</strong> Focus on <strong>full failures</strong> (red) before partial passes (yellow). A full failure gives you the entire point value when fixed; a partial pass only upgrades you from 50% to 100%.
+        </div>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────────────────────────── -->
+    <!-- SECTION: All 36 Rules — Content -->
+    <!-- ────────────────────────────────────────────────────── -->
+    <section id="rules-content" class="doc-section">
+      <h2>Content Quality &amp; Depth — 8 Rules (25 pts)</h2>
+      <p>These checks evaluate whether your page has enough substance for AI engines to understand, trust, and cite its content.</p>
+
+      <table class="rule-table">
+        <thead>
+          <tr>
+            <th>Rule</th>
+            <th>Pts</th>
+            <th>Pass condition</th>
+            <th>How to fix</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Sufficient word count</strong></td>
+            <td><span class="pts-badge">4</span></td>
+            <td>800+ words</td>
+            <td>Expand thin content with more explanation, examples, and supporting detail. Aim for 1,000–2,000 words for key pages. Partial pass at 400–799 words.</td>
+          </tr>
+          <tr>
+            <td><strong>Factual claims &amp; statistics</strong></td>
+            <td><span class="pts-badge">4</span></td>
+            <td>5+ numbers/statistics in body text</td>
+            <td>Add specific data points: percentages, years, dollar figures, study results. AI models strongly prefer content with citable, concrete facts. Partial at 2–4 stats.</td>
+          </tr>
+          <tr>
+            <td><strong>FAQ or question-based structure</strong></td>
+            <td><span class="pts-badge">3</span></td>
+            <td>FAQPage schema + 3+ question headings</td>
+            <td>Add a FAQ section with "What is…", "How to…", "Why does…" headings. Implement <code>FAQPage</code> JSON-LD schema with <code>mainEntity</code> Q&amp;A pairs. Partial pass if schema or headings present (not both).</td>
+          </tr>
+          <tr>
+            <td><strong>Paragraph depth</strong></td>
+            <td><span class="pts-badge">3</span></td>
+            <td>Average 80+ words per paragraph</td>
+            <td>Expand short, thin paragraphs. Each paragraph should develop an idea fully. Avoid one-sentence or two-sentence sections. Partial at 40–79 words average.</td>
+          </tr>
+          <tr>
+            <td><strong>No thin or duplicate content</strong></td>
+            <td><span class="pts-badge">3</span></td>
+            <td>Less than 10% repeated sentences</td>
+            <td>Remove repeated boilerplate blocks, templated disclaimers, or copied sentences. Each paragraph should say something unique. Partial at 10–25% repetition.</td>
+          </tr>
+          <tr>
+            <td><strong>Meta description</strong></td>
+            <td><span class="pts-badge">3</span></td>
+            <td>150–160 characters</td>
+            <td>Write a compelling <code>&lt;meta name="description"&gt;</code> of exactly 150–160 characters. Summarize what the page is about in plain language. Partial at 50–119 chars or over 160 chars.</td>
+          </tr>
+          <tr>
+            <td><strong>Images with descriptive alt text</strong></td>
+            <td><span class="pts-badge">3</span></td>
+            <td>90%+ of images have alt attributes</td>
+            <td>Add meaningful <code>alt=""</code> attributes to every image that conveys information. Describe what the image shows, not "image of" or filename. Partial if 50–89% have alt text.</td>
+          </tr>
+          <tr>
+            <td><strong>Internal links for content depth</strong></td>
+            <td><span class="pts-badge">2</span></td>
+            <td>5+ internal links on the page</td>
+            <td>Link naturally to related content on your site. This signals topical authority and helps AI understand your content graph. Partial at 2–4 internal links.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ────────────────────────────────────────────────────── -->
+    <!-- SECTION: Rules — E-E-A-T -->
+    <!-- ────────────────────────────────────────────────────── -->
+    <section id="rules-eeat" class="doc-section">
+      <h2>E-E-A-T Signals — 5 Rules (20 pts)</h2>
+      <p>Experience, Expertise, Authoritativeness, and Trustworthiness. These signals tell AI whether the content comes from a credible, identifiable source.</p>
+
+      <table class="rule-table">
+        <thead>
+          <tr><th>Rule</th><th>Pts</th><th>Pass condition</th><th>How to fix</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Author byline present</strong></td>
+            <td><span class="pts-badge">4</span></td>
+            <td>Author name detected on page</td>
+            <td>Add a visible "By [Author Name]" attribution near the article title or at the top of the content. Use <code>article:author</code> meta tag and/or <code>Person</code> schema for stronger signals.</td>
+          </tr>
+          <tr>
+            <td><strong>Author bio or credentials</strong></td>
+            <td><span class="pts-badge">3</span></td>
+            <td>Author bio section detected</td>
+            <td>Add a brief bio block below the article: name, title/role, and relevant expertise. Include a phrase like "John is a…" or "With 10 years of experience in…". Partial if author found but no bio detected.</td>
+          </tr>
+          <tr>
+            <td><strong>Publication / last-updated date</strong></td>
+            <td><span class="pts-badge">3</span></td>
+            <td>Parseable date, updated within 6 months</td>
+            <td>Add <code>&lt;meta property="article:modified_time" content="2025-01-15"&gt;</code> and include a visible "Last updated" date on the page. Partial if 7–18 months old. Fail if over 18 months or no date found.</td>
+          </tr>
+          <tr>
+            <td><strong>Citations to authoritative sources</strong></td>
+            <td><span class="pts-badge">5</span></td>
+            <td>3+ links to .gov, .edu, or research journals</td>
+            <td>Link directly to government data, academic research, peer-reviewed studies, or established industry reports. These are the highest-trust citations for AI. Partial at 1–2 authoritative links.</td>
+          </tr>
+          <tr>
+            <td><strong>Brand / org entity in schema</strong></td>
+            <td><span class="pts-badge">3</span></td>
+            <td>Organization / Brand schema with name property</td>
+            <td>Add an <code>Organization</code> JSON-LD block with at minimum <code>@type</code>, <code>name</code>, and <code>url</code>. This tells AI who publishes the content. Partial if schema exists but is missing the <code>name</code> field.</td>
+          </tr>
+          <tr>
+            <td><strong>External outbound links</strong></td>
+            <td><span class="pts-badge">2</span></td>
+            <td>3+ external links to outside domains</td>
+            <td>Link to supporting sources, reference materials, and relevant external resources. This signals research depth and helps AI place your content in a broader knowledge context. Partial at 1–2 external links.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ────────────────────────────────────────────────────── -->
+    <!-- SECTION: Rules — Schema -->
+    <!-- ────────────────────────────────────────────────────── -->
+    <section id="rules-schema" class="doc-section">
+      <h2>Structured Data &amp; Markup — 7 Rules (20 pts)</h2>
+      <p>Machine-readable signals that AI crawlers can parse directly, regardless of how the page is visually presented.</p>
+
+      <table class="rule-table">
+        <thead>
+          <tr><th>Rule</th><th>Pts</th><th>Pass condition</th><th>How to fix</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Schema.org JSON-LD present</strong></td>
+            <td><span class="pts-badge">4</span></td>
+            <td>At least 1 JSON-LD <code>&lt;script&gt;</code> block found</td>
+            <td>Add at minimum an <code>Article</code> or <code>WebPage</code> JSON-LD block inside <code>&lt;script type="application/ld+json"&gt;</code>. This is the foundation — many other schema rules depend on it.</td>
+          </tr>
+          <tr>
+            <td><strong>Schema type matches content</strong></td>
+            <td><span class="pts-badge">4</span></td>
+            <td>Schema <code>@type</code> matches detected content pattern</td>
+            <td>Use <code>Article</code>/<code>BlogPosting</code> for articles, <code>Product</code> for product pages, <code>LocalBusiness</code> for local pages. Mismatches confuse AI about what the page is about.</td>
+          </tr>
+          <tr>
+            <td><strong>FAQPage schema with Q&amp;A pairs</strong></td>
+            <td><span class="pts-badge">3</span></td>
+            <td>FAQPage schema with 3+ mainEntity Q&amp;A pairs</td>
+            <td>Add a <code>FAQPage</code> JSON-LD block with a <code>mainEntity</code> array of at least 3 <code>Question</code>/<code>Answer</code> pairs. AI engines extract FAQ schema directly for featured answers. Partial if fewer than 3 Q&amp;A pairs.</td>
+          </tr>
+          <tr>
+            <td><strong>Open Graph meta tags</strong></td>
+            <td><span class="pts-badge">3</span></td>
+            <td>og:title, og:description, og:image all present</td>
+            <td>Add all three: <code>og:title</code>, <code>og:description</code>, and <code>og:image</code> in the <code>&lt;head&gt;</code>. Partial if 1–2 are present. The detail message lists which are missing.</td>
+          </tr>
+          <tr>
+            <td><strong>Twitter/X Card meta tag</strong></td>
+            <td><span class="pts-badge">2</span></td>
+            <td><code>twitter:card</code> meta tag present</td>
+            <td>Add <code>&lt;meta name="twitter:card" content="summary_large_image"&gt;</code> along with <code>twitter:title</code> and <code>twitter:description</code>.</td>
+          </tr>
+          <tr>
+            <td><strong>Canonical URL tag</strong></td>
+            <td><span class="pts-badge">2</span></td>
+            <td><code>&lt;link rel="canonical"&gt;</code> present</td>
+            <td>Add <code>&lt;link rel="canonical" href="https://example.com/your-page"&gt;</code> in the <code>&lt;head&gt;</code>. Prevents AI engines from seeing multiple versions of the same content as duplicates.</td>
+          </tr>
+          <tr>
+            <td><strong>BreadcrumbList schema</strong></td>
+            <td><span class="pts-badge">2</span></td>
+            <td>BreadcrumbList JSON-LD block found</td>
+            <td>Add a <code>BreadcrumbList</code> schema listing the page's location in your site hierarchy. Helps AI understand topical context (e.g., Blog → Category → Article).</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ────────────────────────────────────────────────────── -->
+    <!-- SECTION: Rules — Formatting -->
+    <!-- ────────────────────────────────────────────────────── -->
+    <section id="rules-formatting" class="doc-section">
+      <h2>Formatting &amp; Scannability — 7 Rules (15 pts)</h2>
+      <p>AI models extract structured information far more reliably from well-formatted content. These rules check whether your page is organized for both human readers and AI parsers.</p>
+
+      <table class="rule-table">
+        <thead>
+          <tr><th>Rule</th><th>Pts</th><th>Pass condition</th><th>How to fix</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Single unique H1 tag</strong></td>
+            <td><span class="pts-badge">3</span></td>
+            <td>Exactly 1 H1 element on the page</td>
+            <td>Every page should have exactly one H1 that states the primary topic. Zero H1s = AI can't determine the page's main subject. Multiple H1s = AI confusion about which topic is primary.</td>
+          </tr>
+          <tr>
+            <td><strong>H2/H3 heading structure</strong></td>
+            <td><span class="pts-badge">3</span></td>
+            <td>3+ H2 sections</td>
+            <td>Break your content into logical sections with H2 headings. AI uses headings as topic anchors for extracting specific answers. Add H3 subsections for longer sections. Partial at 1–2 H2s.</td>
+          </tr>
+          <tr>
+            <td><strong>Bullet and numbered lists</strong></td>
+            <td><span class="pts-badge">2</span></td>
+            <td>2+ lists (combined ul + ol)</td>
+            <td>Use <code>&lt;ul&gt;</code> for unordered items and <code>&lt;ol&gt;</code> for steps/ranked items. Lists are easily extracted by AI for structured answers. Partial at exactly 1 list.</td>
+          </tr>
+          <tr>
+            <td><strong>Callouts or highlighted key points</strong></td>
+            <td><span class="pts-badge">2</span></td>
+            <td>Callout boxes or 5+ bold elements</td>
+            <td>Add blockquote callouts, highlight boxes, or tip/note panels for key takeaways. Bold 5+ key phrases throughout the content. AI surfaces prominently formatted information more readily.</td>
+          </tr>
+          <tr>
+            <td><strong>Table of contents</strong></td>
+            <td><span class="pts-badge">2</span></td>
+            <td>TOC detected (for pages 1,000+ words)</td>
+            <td>Add a linked table of contents near the top of long-form content. Not required for pages under 1,000 words (auto-passes). TOCs help AI navigate long documents and identify section topics.</td>
+          </tr>
+          <tr>
+            <td><strong>Reading level ≤ Grade 10</strong></td>
+            <td><span class="pts-badge">3</span></td>
+            <td>Flesch-Kincaid grade level ≤ 10</td>
+            <td>Use shorter sentences (under 20 words), simpler words, and active constructions. The Flesch-Kincaid formula measures sentence length × syllable complexity. Partial at grade 11–13. Fail above 13.</td>
+          </tr>
+          <tr>
+            <td><strong>Comparison tables</strong></td>
+            <td><span class="pts-badge">3</span></td>
+            <td>1+ HTML table(s) present (for 800+ word pages)</td>
+            <td>Add <code>&lt;table&gt;</code> elements for comparisons, feature lists, pricing, or side-by-side data. HTML tables give AI structured data to extract. Auto-passes for short pages (&lt;800 words).</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ────────────────────────────────────────────────────── -->
+    <!-- SECTION: Rules — Conversational -->
+    <!-- ────────────────────────────────────────────────────── -->
+    <section id="rules-conversational" class="doc-section">
+      <h2>Conversational &amp; AI-Friendly — 5 Rules (12 pts)</h2>
+      <p>These checks evaluate how well your content is structured to match the conversational, question-and-answer nature of AI search interactions.</p>
+
+      <table class="rule-table">
+        <thead>
+          <tr><th>Rule</th><th>Pts</th><th>Pass condition</th><th>How to fix</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Direct answers at section starts</strong></td>
+            <td><span class="pts-badge">3</span></td>
+            <td>60%+ of sections open with a direct statement</td>
+            <td>Lead each section with a direct answer to the implied question the heading poses — before providing context or caveats. AI extracts leading sentences for featured snippets. Partial at 30–59%. Fail below 30%.</td>
+          </tr>
+          <tr>
+            <td><strong>Question-style headings</strong></td>
+            <td><span class="pts-badge">2</span></td>
+            <td>3+ headings that start with What, How, Why, When, etc.</td>
+            <td>Rewrite at least 3 section headings as questions that mirror how users ask AI. E.g., "Benefits" → "What are the benefits of X?" Partial at 1–2 question headings.</td>
+          </tr>
+          <tr>
+            <td><strong>Active voice</strong></td>
+            <td><span class="pts-badge">3</span></td>
+            <td>Low passive voice usage (under 1.5% passive markers)</td>
+            <td>Rewrite passive constructions ("was found by", "is used by") as active voice ("we found", "users use"). Active sentences are shorter and more direct — AI summarizes them more accurately. Partial at 1.5–3%.</td>
+          </tr>
+          <tr>
+            <td><strong>Inline definitions of key terms</strong></td>
+            <td><span class="pts-badge">2</span></td>
+            <td>5+ definition phrases (e.g., "X is defined as…", "X means…", "X refers to…")</td>
+            <td>Define technical terms and acronyms in context the first time they appear. Phrases like "GEO (Generative Engine Optimization) is…" help AI build entity relationships. Partial at 2–4 definitions.</td>
+          </tr>
+          <tr>
+            <td><strong>Low jargon density</strong></td>
+            <td><span class="pts-badge">2</span></td>
+            <td>Under 4% complex/jargon words</td>
+            <td>Replace unnecessary jargon with plain-language equivalents. Technical terms are fine when defined, but avoid obscure vocabulary for its own sake. AI comprehends and summarizes plain language more reliably. Partial at 4–8%.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ────────────────────────────────────────────────────── -->
+    <!-- SECTION: Rules — Technical -->
+    <!-- ────────────────────────────────────────────────────── -->
+    <section id="rules-technical" class="doc-section">
+      <h2>Technical &amp; Freshness — 4 Rules (8 pts)</h2>
+      <p>Baseline technical hygiene and content freshness signals. These are necessary but lower-weighted — fixing them alone won't dramatically move your score, but missing them signals neglect to AI engines.</p>
+
+      <table class="rule-table">
+        <thead>
+          <tr><th>Rule</th><th>Pts</th><th>Pass condition</th><th>How to fix</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>HTTPS protocol</strong></td>
+            <td><span class="pts-badge">1</span></td>
+            <td>Page URL starts with <code>https://</code></td>
+            <td>Obtain and install an SSL certificate. Most hosts (Netlify, Vercel, Cloudflare, AWS) provide free SSL. HTTPS is a trust prerequisite — AI engines deprioritize or skip HTTP sources.</td>
+          </tr>
+          <tr>
+            <td><strong>Core Web Vitals — LCP under 2.5s</strong></td>
+            <td><span class="pts-badge">2</span></td>
+            <td>Largest Contentful Paint &lt; 2,500ms</td>
+            <td>Optimize your largest visible element (usually a hero image or heading). Use lazy loading, serve WebP images, and eliminate render-blocking resources. Partial at 2.5–4s. Fail above 4s.</td>
+          </tr>
+          <tr>
+            <td><strong>Mobile viewport meta tag</strong></td>
+            <td><span class="pts-badge">2</span></td>
+            <td><code>&lt;meta name="viewport"&gt;</code> present</td>
+            <td>Add <code>&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;</code> to your <code>&lt;head&gt;</code>. Most CMS platforms include this by default. Mobile-friendliness is a base requirement for AI crawling.</td>
+          </tr>
+          <tr>
+            <td><strong>Content updated within 12 months</strong></td>
+            <td><span class="pts-badge">3</span></td>
+            <td>Date signal found and within the last 12 months</td>
+            <td>Update your content regularly and publish the date via <code>article:modified_time</code> meta tag or <code>dateModified</code> in Article schema. AI engines deprioritize content older than 1–2 years. Partial at 13–24 months old.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ────────────────────────────────────────────────────── -->
+    <!-- SECTION: Sheets Export -->
+    <!-- ────────────────────────────────────────────────────── -->
+    <section id="sheets" class="doc-section">
+      <h2>Export to Google Sheets</h2>
+      <p>After analyzing a page, you can export the full results to a new Google Spreadsheet in your own Google Drive — perfect for sharing with clients, tracking improvements over time, or team audits.</p>
+
+      <h3>What gets exported</h3>
+      <p>Each export creates a new spreadsheet with <strong>2 tabs</strong>:</p>
+      <ul>
+        <li><strong>Summary tab</strong> — Page URL, overall score and grade, analyzed timestamp, earned/total points, and a score for each of the 6 categories with a color-coded status bar</li>
+        <li><strong>Rule Details tab</strong> — All 36 rules in a table: rule name, category, status (Pass / Partial / Fail), points earned vs possible, and the specific detail message</li>
+      </ul>
+
+      <h3>How to export</h3>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-body">
+            <h3>Click "Export to Sheets"</h3>
+            <p>After a page analysis completes, click the green <strong>Export to Sheets</strong> button.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-body">
+            <h3>Sign in with Google</h3>
+            <p>If you haven't signed in yet, a Google OAuth popup will appear. Choose your Google account and grant the extension permission to create spreadsheets. This only needs to be done once.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num"></div>
+          <div class="step-body">
+            <h3>Open the spreadsheet</h3>
+            <p>The extension creates the spreadsheet and shows an <strong>Open Sheet ↗</strong> link. Click it to open your new Google Sheet. The link persists between sessions.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout note">
+        <span class="callout-icon">ℹ️</span>
+        <div class="callout-body">
+          <strong>Each export creates a new spreadsheet.</strong> If you want to track a page over multiple audits, rename the sheet with a date. A future version may support updating an existing sheet.
+        </div>
+      </div>
+
+      <h3>Privacy note</h3>
+      <p>Your analysis data goes <strong>directly from your browser to Google's servers</strong> — it never passes through TripleDart's servers. The spreadsheet is created in your own Google Drive and is subject to <a href="https://policies.google.com/privacy" target="_blank">Google's Privacy Policy</a>. TripleDart never stores your Google OAuth token.</p>
+    </section>
+
+    <!-- ────────────────────────────────────────────────────── -->
+    <!-- SECTION: Copy -->
+    <!-- ────────────────────────────────────────────────────── -->
+    <section id="copy" class="doc-section">
+      <h2>Copy Score Summary</h2>
+      <p>Click the <strong>Copy</strong> button (clipboard icon) in the results panel to copy a plain-text summary of the current analysis to your clipboard. The copied text includes:</p>
+      <ul>
+        <li>Page URL and title</li>
+        <li>Overall score, grade, and earned points</li>
+        <li>Per-category scores</li>
+        <li>Top issues (fails + partial passes) with detail messages</li>
+      </ul>
+      <p>Paste it directly into Slack, Notion, a client email, or any other tool.</p>
+    </section>
+
+    <!-- ────────────────────────────────────────────────────── -->
+    <!-- SECTION: FAQ -->
+    <!-- ────────────────────────────────────────────────────── -->
+    <section id="faq" class="doc-section">
+      <h2>FAQ &amp; Troubleshooting</h2>
+
+      <div class="faq-item open">
+        <button class="faq-q">Why can't I analyze this page? I get an error. <span class="faq-arrow">+</span></button>
+        <div class="faq-a">
+          <p>The extension cannot analyze: Chrome's own pages (<code>chrome://</code>, <code>chrome-extension://</code>), the Chrome Web Store, PDF files, or <code>file://</code> local files. Navigate to a regular website (any <code>http://</code> or <code>https://</code> page) and try again. If the page is behind a login wall, log in first in the same tab.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">I fixed an issue but my score didn't change. Why? <span class="faq-arrow">+</span></button>
+        <div class="faq-a">
+          <p>Results are cached for 30 minutes per URL. After making changes to your page, click the <strong>Re-run</strong> button (↺) in the extension to force a fresh analysis. Also make sure you've hard-refreshed your page before re-analyzing, so the extension sees your latest changes.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">The Export to Sheets button doesn't work / gives an auth error. <span class="faq-arrow">+</span></button>
+        <div class="faq-a">
+          <p>This is usually a Google OAuth issue. Try these steps:</p>
+          <ol>
+            <li>Click the "Sign in" area (if visible) to force a fresh OAuth flow</li>
+            <li>If Chrome asks for permission, allow the extension to access Google Sheets</li>
+            <li>Check that you're signed into a Google account in Chrome</li>
+            <li>If the problem persists, try removing and re-adding the extension from the Chrome Web Store</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">Does the extension work on pages that aren't in English? <span class="faq-arrow">+</span></button>
+        <div class="faq-a">
+          <p>The structural checks (schema, headings, meta tags, lists, images, links, technical signals) work on any language. The text-based checks (word count, reading level, active voice, jargon density, question headings, direct answers) are tuned for English. Non-English pages may get inaccurate scores on those specific checks, but the structural checks — which make up the majority of points — will still be accurate.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">How is GEO different from traditional SEO? <span class="faq-arrow">+</span></button>
+        <div class="faq-a">
+          <p>Traditional SEO optimizes for search engine crawlers that index and rank pages. GEO optimizes for AI language models that <em>read, understand, and summarize</em> pages. Key differences:</p>
+          <ul>
+            <li><strong>AI doesn't rank pages</strong> — it decides whether to cite your content in a generated answer</li>
+            <li><strong>Content depth matters more</strong> — AI needs enough substance to understand and summarize your content</li>
+            <li><strong>Structured data is more valuable</strong> — AI parses JSON-LD schema directly</li>
+            <li><strong>Conversational formatting wins</strong> — direct answers and question headings match how AI serves responses</li>
+            <li><strong>E-E-A-T is amplified</strong> — AI models heavily weight author credibility and source authority</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">My page already ranks #1 on Google. Will it score high here? <span class="faq-arrow">+</span></button>
+        <div class="faq-a">
+          <p>Not necessarily. Traditional SEO and GEO optimize for different signals. A page can rank #1 on Google with keyword optimization and backlinks but still score poorly on GEO if it lacks author attribution, schema markup, structured data, factual depth, or conversational formatting. The GEO score is specifically about AI engine visibility, not Google rankings.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">Does using this extension affect my page or send any data to TripleDart? <span class="faq-arrow">+</span></button>
+        <div class="faq-a">
+          <p>No. All 36 analysis checks run entirely inside your browser using the Chrome extension APIs. The content of the page you analyze is never sent to TripleDart's servers or any third-party service. The only external connection the extension makes is to the <strong>Google Sheets API</strong> (when you choose to export results) — and that data goes directly from your browser to your own Google Drive.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">Why is the LCP check showing "could not be measured"? <span class="faq-arrow">+</span></button>
+        <div class="faq-a">
+          <p>The LCP (Largest Contentful Paint) measurement uses the browser's <code>PerformanceObserver</code> API, which only fires during the initial page load. If you open the extension <em>after</em> the page has already fully loaded and the LCP event has completed, or if the page type doesn't produce an LCP entry, the check falls back to a partial pass. To get an accurate LCP reading, open the extension shortly after the page first loads.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">Can I analyze multiple pages at once? <span class="faq-arrow">+</span></button>
+        <div class="faq-a">
+          <p>Not in a single session — the extension analyzes the currently active tab. To analyze multiple pages, navigate to each page separately and run the analysis. Each result is cached for 30 minutes, so you can switch between tabs and reopen the extension to see the cached result for each URL. For bulk audits across an entire website, consider TripleDart's full SEO and GEO audit platform.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────────────────────────── -->
+    <!-- SECTION: Privacy -->
+    <!-- ────────────────────────────────────────────────────── -->
+    <section id="privacy" class="doc-section">
+      <h2>Privacy &amp; Permissions</h2>
+      <p>GEO Analyzer is designed with a strict privacy-first approach. Here's exactly what each permission is used for:</p>
+
+      <ul class="checklist">
+        <li>
+          <span class="check-icon">🔵</span>
+          <div>
+            <strong>activeTab</strong> — Grants access to the current tab <em>only when you click "Analyze Page"</em>. The extension cannot access any other tab or browser in the background.
+          </div>
+        </li>
+        <li>
+          <span class="check-icon">🔵</span>
+          <div>
+            <strong>scripting</strong> — Allows the extension to inject the content script that reads the page's DOM structure for analysis. Used only when you actively click Analyze.
+          </div>
+        </li>
+        <li>
+          <span class="check-icon">🔵</span>
+          <div>
+            <strong>storage</strong> — Stores your GEO results in a local cache for up to 30 minutes (to avoid re-running the same analysis), and saves your Google Spreadsheet ID so the "Open Sheet" link persists. All data stays on your device.
+          </div>
+        </li>
+        <li>
+          <span class="check-icon">🔵</span>
+          <div>
+            <strong>identity</strong> — Used only for the Google Sheets export feature. Initiates a Google OAuth 2.0 sign-in flow via Chrome's built-in identity API. The token is held in memory only — never written to disk.
+          </div>
+        </li>
+        <li>
+          <span class="check-icon">🔵</span>
+          <div>
+            <strong>sheets.googleapis.com / www.googleapis.com</strong> — The only two external hosts the extension can contact. Used exclusively for creating and writing Google Spreadsheets when you export, and for fetching Google account info for the sign-in display.
+          </div>
+        </li>
+      </ul>
+
+      <div class="callout tip">
+        <span class="callout-icon">🔒</span>
+        <div class="callout-body">
+          <strong>No tracking. No analytics. No telemetry.</strong> We don't collect your browsing history, page content, or behavior data. Full details: <a href="https://manojtdd.github.io/tdd-geo-analyzer/privacy-policy.html" target="_blank">Privacy Policy ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────────────────────────── -->
+    <!-- SECTION: Changelog -->
+    <!-- ────────────────────────────────────────────────────── -->
+    <section id="changelog" class="doc-section">
+      <h2>Changelog</h2>
+
+      <h3>v2.1.2 — June 2026</h3>
+      <ul>
+        <li>Improved error message when analyzing restricted pages (chrome://, PDFs, extension pages)</li>
+        <li>Removed unused OAuth scope (drive.file) — extension now requests only the minimum required spreadsheet permission</li>
+        <li>Privacy policy updated to accurately reflect host permissions</li>
+        <li>Minor stability hardening</li>
+      </ul>
+
+      <h3>v2.1.0 — May 2026</h3>
+      <ul>
+        <li>Removed Anthropic Claude AI Insights tab — all analysis now runs 100% client-side with zero external API calls</li>
+        <li>Simplified Google OAuth — removed drive.file scope, sheets-only access</li>
+        <li>Improved content script injection using programmatic activeTab approach (removes need for broad host permissions)</li>
+        <li>Export now creates 2-tab spreadsheet: Summary + Rule Details</li>
+      </ul>
+
+      <h3>v2.0.0 — April 2026</h3>
+      <ul>
+        <li>Complete rebuild of the scoring engine with all 36 rules</li>
+        <li>Added Google Sheets export with color-coded rule breakdown</li>
+        <li>Introduced 6-category scoring with category progress bars</li>
+        <li>Added Issues / Passing tab split with priority-sorted issue list</li>
+        <li>Score ring animation and letter grade display</li>
+        <li>30-minute result caching with Re-run button</li>
+      </ul>
+    </section>
+
+    <!-- Footer -->
+    <footer style="border-top:1px solid var(--border); padding-top:28px; margin-top:16px; font-size:13px; color:var(--muted); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+      <span>© 2026 TripleDart Digital Pvt. Ltd.</span>
+      <span style="display:flex;gap:20px;">
+        <a href="https://tripledart.com" target="_blank">tripledart.com</a>
+        <a href="https://manojtdd.github.io/tdd-geo-analyzer/privacy-policy.html" target="_blank">Privacy Policy</a>
+        <a href="mailto:manoj@tripledart.com">Contact</a>
+      </span>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  // ── Sidebar active link on scroll ──────────────────────────
+  const sections = document.querySelectorAll('.doc-section');
+  const links = document.querySelectorAll('.sidebar-link');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        links.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.sidebar-link[href="#${id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-60px 0px -70% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+
+  // ── FAQ accordion ───────────────────────────────────────────
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+</script>
+
+</body>
+</html>
